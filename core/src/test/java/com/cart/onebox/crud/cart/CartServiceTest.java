@@ -1,8 +1,10 @@
 package com.cart.onebox.crud.cart;
 
+import com.cart.onebox.core.StatusCode;
 import com.cart.onebox.core.dataproviders.CartRepository;
 import com.cart.onebox.core.dataproviders.ProductRepository;
 import com.cart.onebox.core.domain.Cart;
+import com.cart.onebox.core.domain.Product;
 import com.cart.onebox.core.service.crud.cart.CartServiceImpl;
 import com.cart.onebox.core.service.crud.cart.param.CartCreateParam;
 import com.cart.onebox.core.service.crud.cart.param.CartUpdateParam;
@@ -11,6 +13,7 @@ import com.cart.onebox.core.service.crud.cart.result.CartDeleteResult;
 import com.cart.onebox.core.service.crud.cart.result.CartDetailResult;
 import com.cart.onebox.core.service.crud.cart.result.CartListResult;
 import com.cart.onebox.core.service.crud.cart.result.CartUpdateResult;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -21,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class CardServiceTest {
+public class CartServiceTest {
 
     private CartRepository cartRepository;
     private ProductRepository productRepository;
@@ -44,6 +47,7 @@ public class CardServiceTest {
                         .build())
                 .build();
         CartCreateResult result = cartService.createCart(param);
+        Assertions.assertEquals(StatusCode.SUCCESS, result.getStatusCode());
     }
 
     @Test
@@ -55,6 +59,7 @@ public class CardServiceTest {
         Mockito.when(cartRepository.findAll()).thenReturn(List.of(mockCart()));
 
         CartListResult result = cartService.getList();
+        Assertions.assertEquals(StatusCode.SUCCESS, result.getStatusCode());
     }
 
     @Test
@@ -67,6 +72,7 @@ public class CardServiceTest {
 
         String id = "123";
         CartDetailResult result = cartService.getDetail(id);
+        Assertions.assertEquals(StatusCode.SUCCESS, result.getStatusCode());
     }
     @Test
     void testUpdateCartOk() {
@@ -77,11 +83,14 @@ public class CardServiceTest {
         CartUpdateParam param = CartUpdateParam.builder()
                 .addToCart(true)
                 .cart(Cart.builder()
+                        .id(UUID.randomUUID().toString())
                         .productList(List.of(1))
                         .build())
                 .build();
-
+        Mockito.when(cartRepository.findById(Mockito.anyString())).thenReturn(mockCart());
+        Mockito.when(productRepository.findById(Mockito.anyInt())).thenReturn(mockProduct());
         CartUpdateResult result = cartService.updateCart(param);
+        Assertions.assertEquals(StatusCode.SUCCESS, result.getStatusCode());
     }
 
     @Test
@@ -92,16 +101,24 @@ public class CardServiceTest {
         );
         String id = "123";
         CartDeleteResult result = cartService.deleteCart(id);
+        Assertions.assertEquals(StatusCode.SUCCESS, result.getStatusCode());
     }
 
     private Cart mockCart() {
         return Cart.builder()
                 .id(UUID.randomUUID().toString())
-                .productList(new ArrayList<>())
+                .productList(List.of(2))
                 .creationUser("test")
                 .creationDate(LocalDateTime.now())
                 .build();
     }
 
+    private Product mockProduct() {
+        return Product.builder()
+                .id(1)
+                .description("Product 1")
+                .amount(10.0F)
+                .build();
+    }
 
 }

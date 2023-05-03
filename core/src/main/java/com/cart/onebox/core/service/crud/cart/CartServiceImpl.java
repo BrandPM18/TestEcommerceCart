@@ -15,6 +15,7 @@ import com.cart.onebox.core.service.crud.cart.result.CartUpdateResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -158,7 +159,10 @@ public class CartServiceImpl implements CartService {
 
     //funcion de java para agregar un List<Integer> a otro sin repeticion
     private List<Integer> setProductList(List<Integer> list1, List<Integer> list2) {
-        list1.addAll(list2);
-        return list1.stream().distinct().collect(Collectors.toList());
+        List<Integer> list3 = new ArrayList<>() {{
+            addAll(list1);
+            addAll(list2);
+        }};
+        return list3.stream().distinct().collect(Collectors.toList());
     }
 }
