@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cart.onebox.dataproviders.repository.mappers.CartMapper">
+    <resultMap id="Base" type="com.cart.onebox.core.domain.Cart">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="products" jdbcType="VARCHAR" property="products"/>
+        <result column="final_amount" jdbcType="REAL" property="totalPrice"/>
+        <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate"/>
+        <result column="modification_date" javaType="TIMESTAMP" property="modificationDate"/>
+        <result column="creation_user" jdbcType="VARCHAR" property="creationUser"/>
+        <result column="modification_user" jdbcType="VARCHAR" property="modificationUser"/>
+    </resultMap>
+    <sql id="Base_Columns">
+        id,
+        products,
+        final_amount,
+        creation_date,
+        modification_date,
+        creation_user,
+        modification_user
+    </sql>
+
+    <select id="findAll" resultMap="Base">
+        SELECT
+            <include refid="Base_Columns"></include>
+        FROM cart;
+    </select>
+</mapper>
